@@ -9,10 +9,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.picsumview.databinding.FragmentPicsumBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -49,9 +49,8 @@ class PicsumFragment : Fragment() {
     private fun collectPictures() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect {
-                    picsumAdapter.pictures = it
-                    picsumAdapter.notifyDataSetChanged()
+                viewModel.uiState.collectLatest {
+                    picsumAdapter.submitData(it)
                 }
             }
         }

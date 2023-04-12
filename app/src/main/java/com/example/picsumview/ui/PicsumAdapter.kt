@@ -1,17 +1,31 @@
 package com.example.picsumview.ui
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
+import com.example.picsumview.R
 import com.example.picsumview.data.network.PicsumModel
 import com.example.picsumview.databinding.ItemPicsumBinding
 
-class PicsumAdapter : RecyclerView.Adapter<PicsumAdapter.PicsumViewHolder>() {
+class PicsumAdapter :
+    PagingDataAdapter<PicsumModel, PicsumAdapter.PicsumViewHolder>(PicsumComparator) {
 
-    var pictures: List<PicsumModel> = emptyList()
+    companion object {
+        object PicsumComparator : DiffUtil.ItemCallback<PicsumModel>() {
+            override fun areItemsTheSame(oldItem: PicsumModel, newItem: PicsumModel): Boolean {
+                return oldItem.link == newItem.link
+            }
+
+            override fun areContentsTheSame(oldItem: PicsumModel, newItem: PicsumModel): Boolean {
+                return oldItem == newItem
+            }
+        }
+    }
 
     inner class PicsumViewHolder(val binding: ItemPicsumBinding) :
         RecyclerView.ViewHolder(binding.root)
@@ -24,19 +38,18 @@ class PicsumAdapter : RecyclerView.Adapter<PicsumAdapter.PicsumViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: PicsumViewHolder, position: Int) {
-        val picture = pictures[position]
-        Log.i("Adapter", picture.toString())
-        with (holder.binding) {
-            Glide.with(imgPicsum.context)
-                .load(picture.link)
-                .downsample(DownsampleStrategy.AT_MOST)
-                .centerCrop()
-                .into(imgPicsum)
-            txtAuthor.text = picture.author
+        getItem(position)?.let { picture ->
+            with(holder.binding) {
+                Glide.with(imgPicsum.context)
+                    .load(picture.link)
+                    .downsample(DownsampleStrategy.AT_MOST)
+                    .placeholder(R.drawable.ic_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .centerCrop()
+                    .into(imgPicsum)
+                txtAuthor.text = picture.author
+            }
         }
     }
-
-
-    override fun getItemCount(): Int = pictures.size
 
 }
