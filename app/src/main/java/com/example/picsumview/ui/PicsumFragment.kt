@@ -12,8 +12,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.picsumview.databinding.FragmentPicsumBinding
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class PicsumFragment : Fragment() {
 
     companion object {
@@ -25,7 +27,7 @@ class PicsumFragment : Fragment() {
     private val picsumAdapter: PicsumAdapter = PicsumAdapter()
 
     private var _binding: FragmentPicsumBinding? = null
-    private val binding = _binding!!
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +37,6 @@ class PicsumFragment : Fragment() {
         binding.listPicsum.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = picsumAdapter
-            addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         }
         return binding.root
     }

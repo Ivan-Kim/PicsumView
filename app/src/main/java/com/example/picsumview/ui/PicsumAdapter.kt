@@ -1,10 +1,12 @@
 package com.example.picsumview.ui
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import com.example.picsumview.data.PicsumModel
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
+import com.example.picsumview.data.network.PicsumModel
 import com.example.picsumview.databinding.ItemPicsumBinding
 
 class PicsumAdapter : RecyclerView.Adapter<PicsumAdapter.PicsumViewHolder>() {
@@ -23,8 +25,13 @@ class PicsumAdapter : RecyclerView.Adapter<PicsumAdapter.PicsumViewHolder>() {
 
     override fun onBindViewHolder(holder: PicsumViewHolder, position: Int) {
         val picture = pictures[position]
+        Log.i("Adapter", picture.toString())
         with (holder.binding) {
-            imgPicsum.load(picture.url)
+            Glide.with(imgPicsum.context)
+                .load(picture.link)
+                .downsample(DownsampleStrategy.AT_MOST)
+                .centerCrop()
+                .into(imgPicsum)
             txtAuthor.text = picture.author
         }
     }
