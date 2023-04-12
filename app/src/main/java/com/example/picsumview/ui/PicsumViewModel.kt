@@ -1,7 +1,7 @@
-package com.example.picsumview.ui.main
+package com.example.picsumview.ui
 
 import androidx.lifecycle.ViewModel
 
-class MainViewModel : ViewModel() {
+class PicsumViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 }
