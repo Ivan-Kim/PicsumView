@@ -24,7 +24,7 @@ class PicsumFragment : Fragment() {
 
     private val viewModel: PicsumViewModel by viewModels()
 
-    private val picsumAdapter: PicsumAdapter = PicsumAdapter()
+    private val picsumAdapter = PicsumAdapter()
 
     private var _binding: FragmentPicsumBinding? = null
     private val binding get() = _binding!!
